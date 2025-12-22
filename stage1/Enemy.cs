@@ -5,11 +5,11 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
 /**
- * Enemy.cs
- * 1. 지정된 두 지점(endpoint) 사이를 왕복 순찰하는 적의 움직임을 제어합니다.
- * 2. 인벤토리 활성화 시 이동을 멈추는 일시정지 기능이 포함되어 있습니다.
+ * 1. 지정된 두 지점(endpoint) 사이를 왕복 하는 몬스터의 움직임을 제안
+ * 2. 인벤토리 활성화 시 몬스터의 이동을 멈추도록 함
  * 3. Transform.Translate와 eulerAngles를 이용하여 물리 엔진 부하를 최소화하며 이동합니다.
  */
+ 
     public float speed; //몬스터의 이동 속도
 
     bool isLeft = true; //현재 이동 방향 상태 (true면 왼쪽, false면 오른쪽)
