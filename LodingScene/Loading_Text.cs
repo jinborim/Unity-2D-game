@@ -6,14 +6,17 @@ using TMPro;
 
 public class Loading_Text : MonoBehaviour
 {
+/**
+* 다음 스테이지가 용량이 커서 넘어가는 시간 때문에 로딩 씬을 만듦
+**/
     public TextMeshProUGUI dialog_context;
 
     // Start is called before the first frame update
     void Start()
     {
         dialog_context = this.GetComponentInChildren<TextMeshProUGUI>();
-        dialog_context.text = null;
-        StartCoroutine(Typing("Now Loading..."));
+        dialog_context.text = ""; //시작할때마다 텍스트를 비움 
+        StartCoroutine(Typing("Now Loading...")); // "Now Loding..."이라는 텍스트가 뜸
     }
 
     // Update is called once per frame
@@ -24,26 +27,17 @@ public class Loading_Text : MonoBehaviour
 
     IEnumerator Typing(string dialogue)
     {
-        //이 함수가 시작할 때 한 번 내용물을 싹 비워준다(안그러면 전의 대사에 추가해서 나옴)
-        //위의 Typing_trigger에서 dialogue를 가져와서 talk라는 지역변수?로 사용
+      while(true){ // 무한 반복
+      dialog_context.text = ""; // 반복할 때마다 처음에는 텍스트를 비우면서 시작
 
-        do
-        {
-            //dialog_context.text = null;
+        //글자 수 만큼 반복하여 한개씩 출력
+      for(int i<0; i<dialog_text.Length; i++){ 
+      // i번째 글자를 추가
+      dialog_context.text += dialogue[i]
 
-
-            for (int i = 0; i < dialogue.Length; i++)
-            {
-                dialog_context.text = null;
-                string talk = dialogue;
-                for (int j = 0; j < talk.Length; j++)
-                {
-                    dialog_context.text += talk[j];
-                    yield return new WaitForSeconds(0.2f); //코러틴 함수에서 사용하는 함수로, 지정된 시간에 한번씩 돌아가게 됨 > 글자 출력 속도랑 같다고 볼 수 있음
-                }
-                yield return new WaitForSeconds(0.3f);
-            }
-        } while (true);
-
+        // 0.15초 정도의 타이핑 속도
+      yeid return new WaitForSeconds(0.15f);
     }
+        // 완성 된 문장을 1초 정도 보여줌
+        yeid return new WaitForSeconds(1.0);
 }
