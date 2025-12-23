@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 public class Boss_Health : MonoBehaviour
 {
+/**
+* 보스의 체력
+**/
+
     public float Full_Health = 150;
     public float Health = 150;
     //원래 체력은 150
