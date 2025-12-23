@@ -7,43 +7,47 @@ using TMPro;
 
 public class Boss_Dialog : MonoBehaviour
 {
-
+/**
+* Boss 스테이지에서 대화 시스템
+**/
+    // 어디서든 대화창 오브젝트에 접근할 수 있도록함
     public static GameObject Dialogue;
 
-    //public GameObject dialogObj;
+    // 실제 대사가 출력될 텍스트 
     public TextMeshProUGUI dialog_context; 
+    
+    // 대사를 담아둘 배열
     string[] dialogue;
-    //[SerializeField]
-    //private GameObject select_base;
 
+    // 외부 스크트와의 연결을 위한 변수
     public Boss_Health boss_health;
     public Boss_Trigger boss_trigger;
 
+    // 대화가 끝났는지 확인
     public bool dialogue_END;
 
+    //효과음 재생을 위한 매니저 참조
     public SoundEffect_Manager soundEffect;
 
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        dialog_context=this.GetComponentInChildren<TextMeshProUGUI>();
-        dialog_context.gameObject.SetActive(false);
-        //dialogObj.gameObject.SetActive(false);
-        dialogue_END = false;
-        boss_trigger = GameObject.FindObjectOfType<Boss_Trigger>();
-        soundEffect = GameObject.FindObjectOfType<SoundEffect_Manager>();
-    }
-
-
-
-    // Update is called once per frame
     private void Awake()
     {
         Dialogue = this.gameObject;
     }
 
+    void Start()
+    {
+        // 자식에게서 텍스트 컴포넌트를 가져옴
+        // 시작할 때는 대화창이 안보이도록 비활성화함
+        // 상태 초기화
+        //boss_tirgger와 soudEffect를 자동으로 찾아서 연결
+        
+        dialog_context=this.GetComponentInChildren<TextMeshProUGUI>();
+        dialog_context.gameObject.SetActive(false);
+        dialogue_END = false;
+        boss_trigger = GameObject.FindObjectOfType<Boss_Trigger>();
+        soundEffect = GameObject.FindObjectOfType<SoundEffect_Manager>();
+    }
     public void Typing_trigger(string[] _dialog)
     {
         // 다른 스크립트에서 현재 스크립트를 참조해서 Typing_trigger 사용
