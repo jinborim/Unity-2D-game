@@ -41,6 +41,7 @@ public class Boss_Dialog : MonoBehaviour
         // 시작할 때는 대화창이 안보이도록 비활성화함
         // 상태 초기화
         //boss_tirgger와 soudEffect를 자동으로 찾아서 연결
+        //FindObjectType은 Start에서 한번은 실행하는것은 괜찮지만 Update에서는 X
         
         dialog_context=this.GetComponentInChildren<TextMeshProUGUI>();
         dialog_context.gameObject.SetActive(false);
