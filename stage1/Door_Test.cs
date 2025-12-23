@@ -5,20 +5,25 @@ using UnityEngine.UI;
 
 public class Door_Test : MonoBehaviour
 {
-    public Dialog_Test dialog_;
+    [Header("Core Reference")]
+    public Dialog_Test dialog_; //타이핑 효과 스크립트 참조
+
+    [Header("State")]
     public bool is_Enter=false;
     public bool is_Interactioning = false;
-    //GameObject Dialog;
 
+    [Header("Data & UI Container")]
     string[] Renew_Dialogue;
     public bool Select_need = false;
 
-    public GameObject dialog_parent;
-    public GameObject dialog;
-    public GameObject select_;
+    public GameObject dialog_parent; // 모든 대화 UI
+    public GameObject dialog; // 실제 대화창 오브젝트
+    public GameObject select_; // 선택지 오브젝트
 
 
-
+    /// <summary>
+    /// 외부(NPC, 문 등)에서 대사 데이터와 설정값을 넘겨줌
+    /// </summary>
     public void Get_Dialogue(bool is_enter, string[] _dialogue, bool _needSelect)
     {
         is_Enter = is_enter;
@@ -27,59 +32,56 @@ public class Door_Test : MonoBehaviour
         
     }
 
-
+    /// <summary>
+    /// 스페이스바로 대화의 시작과 끝을 관리
+    /// </summary>
     public void Interaction()
     {
-        //스페이스바를 누르면 interaction 값을 받아줄, update 안에 넣을 함수 필요(IS_ENTER함수 재활용하자..
-        if (Input.GetKeyDown(KeyCode.Space) == true)
+        //스페이스바를 누르면 interaction 값을 받아줄, update 안에 넣을 함수 필요
+        if (Input.GetKeyDown(KeyCode.Space))
         {
 
-            if (is_Interactioning == false)
+            if (!is_Interactioning)
             {
-                dialog.SetActive(true);
+                // 대화창 활성화
+                dialog.SetActive(true); 
                 is_Interactioning = true;
-                
+                // 대사를 타이핑 연출로 전달
                 dialog_.Typing_trigger(Renew_Dialogue, Select_need);
                 
 
             }
-            else if (is_Interactioning == true)
+        else
             {
-                dialog_.dialogObj.SetActive(false);
+                dialog_.dialogObj.SetActive(false); // 타이핑 스크립트의 오브젝트 비활성화
                 is_Interactioning = false;
-                dialog_parent.transform.Find("SelectedBase").gameObject.SetActive(false);
-
+                
+                // 선택지 UI도 비활성화
+                select_.SetActive(false); 
             }
-
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
-        //dialog_= GameObject.FindObjectOfType<Dialog_Test>();
-        Renew_Dialogue=null;
-        Select_need = false;
-        //select_ = GameObject.Find("Dialog").transform.Find("SelectedBase").gameObject;
+        // 최상위 부모를 기준으로 자식들을 탐색하여 참조를 자동화했습니다.
+        // 이는 UI 구조가 변경되어도 유연하게 대응하기 위한 설계입니다.
         dialog_parent = GameObject.Find("Dialog");
         dialog = dialog_parent.transform.Find("DialogBase").gameObject;
         dialog_ = dialog.transform.GetComponent<Dialog_Test>();
         select_ = dialog_parent.transform.Find("SelectedBase").gameObject;
 
+        // 시작할때 데이터가 남아있지 않게 하기 위해 초기화
+        Renew_Dialogue = null;
+        Select_need = false;
     }
 
-
-
-    // Update is called once per frame
     void Update()
     {
-        if ((is_Enter == true)||((is_Enter==false) &&(is_Interactioning==true) ))
+        // 문 앞에 서 있을 때나 문 범위 밖인데도 대화창이 켜져 있는 경우에 스페이스바로 끌 수 있게 함
+        if (is_Enter || is_Interactioning)
         {
-            //기본적으로 문과 닿아있을 때 스페이스를 눌렀는지 확인할 수 있음
-            //그러나 문과 닿는 순간 대화창을 켰는데 움직임이 멈췄을 때 문과 닿아있지 않으면 움직이지도 대화창을 끄지도 못함
-            // >> 이 문제를 해결하기 위에 뒤의 코드에서 문과 닿아있지 않지만 대화창은 켜져 있는 경우에도 대화창을 끌 수 있게 함
             Interaction();
         }
-
     }
 }
