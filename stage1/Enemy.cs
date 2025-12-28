@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
         speed = Random.Range(2, 6); //속도를 2~6사이로 몬스터 마다 움직이는 속도를 다르게 부여함
     }
 
-    // Update is called once per frame
+ 
     void Update()
     {
         if (Inventory.invectoryActivated == false) //인벤토리가 닫혀 있을때만 몬스터가 움직이도록 함
@@ -30,23 +30,24 @@ public class Enemy : MonoBehaviour
     }
    void TurnAround()
     {
-        if (collision.gameObject.CompareTag("endpoint")) //부딪힌 투명벽의 태그가 endpoint일 시 - 몬스터가 투명벽 지점에 도달하여 충돌하면 반대쪽으로 움직이게 왕복을 시킨다
-        {
-            if (isLeft) //왼쪽으로 간다면
+        
+            if (isLeft) // 왼쪽으로 간다면
             {
                 transform.eulerAngles = new Vector3(0, 180, 0); // Y축 방향을 180도로 반대로 돌려 오른쪽으로 가게함
                 isLeft = false;
             }
             else
             {
-                transform.eulerAngles = new Vector3(0, 0, 0); //오른쪽으로 가고 있다가 충돌시 다시 왼쪽으로 몸이 걸엉감
+                transform.eulerAngles = new Vector3(0, 0, 0); // 오른쪽으로 가고 있다가 충돌시 다시 왼쪽으로 몸을 돌려 걸어감
                 isLeft = true;
             }
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("endpoint")) TurnAround(); //부딪혔을 때 함수 호출
+        // 특정 endpoint와 충돌시 방향 전환
+        if(collision.gameObject.CompareTag("endpoint"))
+        {
+        TurnAround();
     }
 }
