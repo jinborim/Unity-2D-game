@@ -9,13 +9,14 @@ public class MonsterMovement : MonoBehaviour
     private Rigidbody2D monsterRd;
     public int nextMove; 
     public float speed = 2f;
-    public int currentHealth;
+    public int M_healt;
 
-    [Header("Referenced Scripts")]
-    public HP_Manager hpManager; 
-    public Monster monsterData; 
-    public CharacterMovement player; 
-    public Boss_Movement boss; 
+   public bool is_endpoint; 
+    public HP_Manager hp_manger; 
+
+    public Monster monster_; 
+    public CharacterMovement character; 
+    public Boss_Movement Boss; 
 
     private void Awake()
     {
@@ -24,48 +25,62 @@ public class MonsterMovement : MonoBehaviour
 
     private void Start()
     {
-        // 시작 시 캐싱하여 성능 최적화 (Update나 충돌 시 Find 방지)
-        if (hpManager == null) hpManager = FindObjectOfType<HP_Manager>();
-        if (player == null) player = FindObjectOfType<CharacterMovement>();
-        if (boss == null) boss = FindObjectOfType<Boss_Movement>();
+        is_endpoint = false;
+        
+        // 시작할 때 미리 찾아두기 (성능 최적화)
+        hp_manger = GameObject.FindObjectOfType<HP_Manager>();
+        character = GameObject.FindObjectOfType<CharacterMovement>();
+        Boss = GameObject.FindObjectOfType<Boss_Movement>();
 
-        currentHealth = monsterData.M_health;
+        if (monster_ != null)
+        {
+            M_health = monster_.M_health;
+        }
     }
 
-    // 충돌 처리 로직 통합 관리
-    private void OnCollisionEnter2D(Collision2D collision) => HandlePlayerContact(collision.gameObject);
-    private void OnTriggerEnter2D(Collider2D collision) => HandlePlayerContact(collision.gameObject);
-
-    private void HandlePlayerContact(GameObject contactObj)
+    // 캐릭터와 충돌했을 때 (물리)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (contactObj.CompareTag("Character"))
+        if (collision.gameObject.CompareTag("Character") == true)
         {
-            // 플레이어가 무적 상태가 아닐 때만 데미지 처리
-            if (player != null && !player.is_Beat)
+            if (character.is_Beat == false)
             {
-                hpManager?.Damaged(monsterData.damage);
+                if (hp_manger != null)
+                {
+                    hp_manger.Damaged(monster_.damage);
+                }
             }
         }
     }
 
-    // 피격 및 사망 처리
-    public void TakeDamage(int damage)
+    // 캐릭터와 충돌했을 때 (트리거)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        currentHealth -= damage;
-        
-        if (currentHealth <= 0)
+        if (collision.gameObject.CompareTag("Character") == true)
         {
-            Die();
+            if (character.is_Beat == false)
+            {
+                if (hp_manger != null)
+                {
+                    hp_manger.Damaged(monster_.damage);
+                }
+            }
         }
     }
 
-    private void Die()
+    // 몬스터가 데미지를 입을 때 호출되는 함수
+    public void health_manager(int damage)
     {
-        // 보스가 소환한 몬스터라면 보스 스크립트의 카운트 감소
-        if (boss != null)
+        this.M_health -= damage;
+        
+        if (this.M_health <= 0)
         {
-            boss.Rest_count--;
+            // 사망 처리 전 보스에게 알림
+            if (Boss != null) 
+            {
+                Boss.Rest_count -= 1;
+            }
+            Destroy(gameObject); 
         }
-        Destroy(gameObject);
     }
 }
