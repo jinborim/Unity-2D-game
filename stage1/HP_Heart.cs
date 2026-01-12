@@ -8,11 +8,9 @@ public class HP_Heart : MonoBehaviour
 /**
 * 유저의 생존과 직결되는 체력(Heart UI)을 제어
 **/
-    [Header("UI Reference")] //UI 관련 변수
     public GameObject hp_heart;
     public Image hp_Heart;
 
-    [Header("Health Balance")] //수치 설정 변수
     public float filled_amount;
     public int Heart_Health = 100;
 
